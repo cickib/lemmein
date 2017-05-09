@@ -1,0 +1,25 @@
+body {
+    background: url("../img/bokeh.jpg");
+    background-size: 100%;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: -1;
+    text-align: center;
+}
+
+a, a:link, a:visited, a:hover, a:active {
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: #6c116f;
+    border-color: #340137;
+}
+
+.btn-primary:hover, .btn-primary:active {
+    background-color: #340137;
+    border-color: #6c116f;
+}
