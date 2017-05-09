@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<div th:replace="fragments/styles :: copy"></div>
+
+<div th:fragment="copy">
+    <form th:action="@{/login}" method="post" name="Login_Form" class="form-signin">
+        <h3 class="form-signin-heading">LEMMEIN</h3>
+        <hr class="colorgraph">
+        <br/>
+
+        <input type="text" class="form-control" name="username" placeholder="Username" required=""
+               autofocus=""/>
+        <input type="password" class="form-control" name="password" placeholder="Password" required=""/>
+
+        <button class="btn btn-lg btn-primary btn-block" name="SUBMIT" value="LOGIN" type="Submit">LOGIN
+        </button>
+    </form>
+</div>
+</html>
