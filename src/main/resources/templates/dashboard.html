@@ -10,7 +10,34 @@
 <body>
 
 <div th:replace="fragments/navbar :: copy"></div>
-<i class="fa fa-building-o" aria-hidden="true"></i>
 
+<div class="container fluid">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1>FLATS <i class="fa fa-building-o" aria-hidden="true"></i></h1>
+            <table class="table table-hover" id="flatsTable">
+                <thead>
+                <tr>
+                    <th>SQUAREMETER</th>
+                    <th>RENT/MONTH</th>
+                    <th>ADDRESS</th>
+                    <th>URL</th>
+                    <th>COMPANY</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="flat, iterStat : ${flats}">
+                    <td th:text="${flat.squareMeter}">Négyzetméter</td>
+                    <td th:text="${flat.rent}">Bérleti díj/hó</td>
+                    <td th:text="${flat.district +' | '+ flat.address}">Cím</td>
+                    <td th:text="${flat.adUrl}">Link</td>
+                    <td th:text="${flat.company}">Company</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
 </body>
 </html>

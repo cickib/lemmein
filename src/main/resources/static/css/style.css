@@ -8,6 +8,17 @@ body {
     top: 0px;
     z-index: -1;
     text-align: center;
+    vertical-align: middle;
+}
+
+.main {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.logo {
+    font-size: 140px;
+    margin: auto;
 }
 
 a, a:link, a:visited, a:hover, a:active {
@@ -22,4 +33,12 @@ a, a:link, a:visited, a:hover, a:active {
 .btn-primary:hover, .btn-primary:active {
     background-color: #340137;
     border-color: #6c116f;
+}
+
+#flatsTable, .table, table.dataTable tbody tr {
+    background-color: rgba(255, 255, 255, 0.40);
+}
+
+#flatsTable tr:hover, .table tr:hover, table.dataTable tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.6);
 }
