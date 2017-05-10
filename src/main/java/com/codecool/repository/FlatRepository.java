@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FlatRepository extends JpaRepository<Flat, Integer> {
+    boolean existsByAdUrl(String url);
 }
