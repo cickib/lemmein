@@ -19,6 +19,7 @@
             <table class="table table-hover" id="flatsTable">
                 <thead>
                 <tr>
+                    <th>ID</th>
                     <th>SQUAREMETER</th>
                     <th>RENT/MONTH</th>
                     <th>ADDRESS</th>
@@ -28,6 +29,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="flat, iterStat : ${flats}">
+                    <td th:text="${flat.id}">id</td>
                     <td th:text="${flat.squareMeter}">Négyzetméter</td>
                     <td th:text="${flat.rent}">Bérleti díj/hó</td>
                     <td th:text="${flat.district +' | '+ flat.address}">Cím</td>
