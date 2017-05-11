@@ -33,7 +33,7 @@
                     <td th:text="${flat.squareMeter}">Négyzetméter</td>
                     <td th:text="${flat.rent}">Bérleti díj/hó</td>
                     <td th:text="${flat.district +' | '+ flat.address}">Cím</td>
-                    <td th:text="${flat.adUrl}">Link</td>
+                    <td><a class="td-url" th:text="${flat.adUrl}"></a></td>
                     <td th:text="${flat.company}">Company</td>
                 </tr>
                 </tbody>
@@ -41,5 +41,8 @@
         </div>
         <div class="col-md-2"></div>
     </div>
+</div>
+<div th:replace="fragments/footer :: copy"></div>
+<div th:replace="fragments/scripts :: copy"></div>
 </body>
 </html>
