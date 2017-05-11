@@ -21,6 +21,7 @@ public class AlberletHuCrawler extends AbstractCrawler {
         sizeClass = "advert__address-line2";
         districtClass = "advert__city";
         blockClass = "advert__details";
+        sizeRegex = "(.*)(?= m2)";
     }
 
     @Override
@@ -39,22 +40,13 @@ public class AlberletHuCrawler extends AbstractCrawler {
 
     @Override
     public Flat createFlat(Element element) {
-        Flat flat = new Flat();
-        flat.setCompany(company);
-        int rent = getRent(element.getElementsByClass(rentClass).first());
+        Flat flat = super.createFlat(element);
+
+        int rent = getRent(element);
         flat.setRent(rent);
 
-        String street = element.getElementsByClass(streetClass).text();
+        String street = getElementText(element, streetClass);
         flat.setAddress(street);
-
-        String district = extractDistrict(element);
-        flat.setDistrict(district);
-
-        int squareMeter = Integer.parseInt(element.getElementsByClass(sizeClass)
-                .text().replaceAll("\\D+", "").substring(0, 2));
-        flat.setSquareMeter(squareMeter);
-
-        logger.info("Flat created. Company: {}", company);
 
         return flat;
     }

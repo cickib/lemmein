@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public abstract class AbstractCrawler implements Crawler {
@@ -32,9 +32,10 @@ public abstract class AbstractCrawler implements Crawler {
     protected String rentClass;
     protected String sizeClass;
     protected String districtClass;
-    protected String districtRegex = "\\(VII|VI|V\\)";
+    protected String districtRegex = "(VII|VI|V)";
     protected String blockClass;
-    
+    protected String sizeRegex;
+
     @Autowired
     protected FlatRepository flatRepository;
 
@@ -72,15 +73,38 @@ public abstract class AbstractCrawler implements Crawler {
     }
 
     protected int getRent(Element element) {
+        element = element.getElementsByClass(rentClass).first();
         return Integer.parseInt(element.text().replaceAll("\\D+", ""));
     }
 
-    protected String extractDistrict(Element element) {
-        String district = element.getElementsByClass(districtClass).text();
-        String retained = district.replaceAll(districtRegex, "");
-        district = Arrays.stream(district.split("")).filter(c ->
-                !retained.contains(c)).collect(Collectors.joining());
-        return district;
+    private String extractDistrict(Element element) {
+        String district = getElementText(element, districtClass).replaceAll("\\s+", "");
+        Matcher matcher = Pattern.compile(districtRegex).matcher(district);
+        return (matcher.find()) ? matcher.group(1) : "";
     }
 
+    protected String getElementText(Element element, String cLass) {
+        return element.getElementsByClass(cLass).text();
+    }
+
+    private int extractSize(String dataString) {
+        Matcher matcher = Pattern.compile(sizeRegex).matcher(dataString);
+        return (matcher.find()) ? Integer.parseInt(matcher.group(1).replaceAll("\\s+", "")) : 0;
+    }
+
+    @Override
+    public Flat createFlat(Element element) {
+        Flat flat = new Flat();
+        flat.setCompany(company);
+
+        String district = extractDistrict(element);
+        flat.setDistrict(district);
+
+        String sizeString = getElementText(element, sizeClass);
+        flat.setSquareMeter(extractSize(sizeString));
+
+        logger.info("Flat created. Company: {}", company);
+
+        return flat;
+    }
 }
