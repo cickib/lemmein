@@ -17,7 +17,7 @@ public class Flat {
     private String address;
 
     @NotNull
-    private float squareMeter;
+    private int squareMeter;
 
     @NotNull
     private String district;
