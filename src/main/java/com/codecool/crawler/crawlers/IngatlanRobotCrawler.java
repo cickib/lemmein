@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class IngatlanRobotCrawler extends AbstractCrawler {
 
@@ -21,11 +22,11 @@ public class IngatlanRobotCrawler extends AbstractCrawler {
         rentClass = "ads_list_price";
         sizeClass = "ads_list";
         districtClass = streetClass;
-     sizeRegex = "(?<=ezer)(.*)(?=m²)";
+        sizeRegex = "(?<=ezer)(.*)(?=m²)";
     }
 
     @Override
-    public void collectFlatData() {
+    public void getFlats() {
         Document doc = getRawData();
         Elements elements = doc.getElementsByClass(blockClass);
 

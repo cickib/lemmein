@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AlberletHuCrawler extends AbstractCrawler {
-
     public AlberletHuCrawler() {
         URL = "http://www.alberlet.hu/kiado_alberlet/berendezes:1/berleti-dij:1-120-ezer-ft/ingatlan-tipus:lakas/kerulet:v+vi+vii/megye:budapest/meret:28-50-m2/limit:48";
         company = "alberlet.hu";
@@ -25,7 +24,7 @@ public class AlberletHuCrawler extends AbstractCrawler {
     }
 
     @Override
-    public void collectFlatData() {
+    public void getFlats() {
         Document doc = getRawData();
         Elements elements = doc.getElementsByClass(blockClass);
         logger.info("{} blocks of data collected from {}", elements.size(), company);

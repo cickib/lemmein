@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 @Service
 public abstract class AbstractCrawler implements Crawler {
 
@@ -38,12 +39,6 @@ public abstract class AbstractCrawler implements Crawler {
 
     @Autowired
     protected FlatRepository flatRepository;
-
-    @Override
-    public List<Flat> getFlats() {
-        collectFlatData();
-        return flatRepository.findAll();
-    }
 
     @Override
     public Document getRawData() {
