@@ -5,6 +5,7 @@ import com.codecool.repository.FlatRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public abstract class AbstractCrawler implements Crawler {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    protected List<Flat> blocks = new ArrayList<>();
+    private List<Flat> blocks = new ArrayList<>();
 
     protected String company;
     protected String URL;
@@ -38,7 +39,7 @@ public abstract class AbstractCrawler implements Crawler {
     protected String sizeRegex;
 
     @Autowired
-    protected FlatRepository flatRepository;
+    private FlatRepository flatRepository;
 
     @Override
     public Document getRawData() {
@@ -50,41 +51,6 @@ public abstract class AbstractCrawler implements Crawler {
             logger.error("{} occurred while retrieving blocks of data. Details: {}", e.getCause(), e.getMessage());
         }
         return doc;
-    }
-
-    @Override
-    public void storeFlats() {
-        if (blocks.size() > 0) {
-            blocks.forEach(flat -> {
-                if (!(flatRepository.existsByAdUrl(flat.getAdUrl()))) {
-                    flatRepository.save(flat);
-                }
-            });
-        }
-    }
-
-    protected String getHref(Document doc, int i) {
-        return doc.getElementsByClass(hrefClass).get(i).select("a").first().attr("href");
-    }
-
-    protected int getRent(Element element) {
-        element = element.getElementsByClass(rentClass).first();
-        return Integer.parseInt(element.text().replaceAll("\\D+", ""));
-    }
-
-    private String extractDistrict(Element element) {
-        String district = getElementText(element, districtClass).replaceAll("\\s+", "");
-        Matcher matcher = Pattern.compile(districtRegex).matcher(district);
-        return (matcher.find()) ? matcher.group(1) : "";
-    }
-
-    protected String getElementText(Element element, String cLass) {
-        return element.getElementsByClass(cLass).text();
-    }
-
-    private int extractSize(String dataString) {
-        Matcher matcher = Pattern.compile(sizeRegex).matcher(dataString);
-        return (matcher.find()) ? Integer.parseInt(matcher.group(1).replaceAll("\\s+", "")) : 0;
     }
 
     @Override
@@ -102,4 +68,66 @@ public abstract class AbstractCrawler implements Crawler {
 
         return flat;
     }
+
+    @Override
+    public void getFlats() {
+        Document doc = getRawData();
+        Elements elements = doc.getElementsByClass(blockClass);
+
+        logger.info("{} blocks of data collected from {}", elements.size(), company);
+
+        for (int i = 0; i < elements.size(); i++) {
+            Flat flat = createFlat(elements.get(i));
+            flat.setAdUrl(getHref(doc, i));
+            blocks.add(flat);
+        }
+        storeFlats();
+    }
+
+    @Override
+    public void storeFlats() {
+        if (blocks.size() > 0) {
+            blocks.forEach(flat -> {
+                if (!(flatRepository.existsByAdUrl(flat.getAdUrl()))) {
+                    flatRepository.save(flat);
+                }
+            });
+        }
+    }
+
+    protected String getElementText(Element element, String cLass) {
+        return element.getElementsByClass(cLass).text();
+    }
+
+    protected int getRent(Element element) {
+        element = element.getElementsByClass(rentClass).first();
+        return Integer.parseInt(element.text().replaceAll("\\D+", ""));
+    }
+
+    private String getHref(Document doc, int i) {
+        String url = doc.getElementsByClass(hrefClass).get(i).select("a").first().attr("href");
+        return normalizeUrl(url);
+    }
+
+    private String normalizeUrl(String url) {
+        String prefixRegex = "(http:\\/\\/|https|www.)";
+        if (!(url.contains(company))) {
+            url = company + url;
+        }
+        String prefix = "https://www.";
+        Matcher matcher = Pattern.compile(prefixRegex).matcher(url);
+        return (matcher.find()) ? url : (prefix + url);
+    }
+
+    private String extractDistrict(Element element) {
+        String district = getElementText(element, districtClass).replaceAll("\\s+", "");
+        Matcher matcher = Pattern.compile(districtRegex).matcher(district);
+        return (matcher.find()) ? matcher.group(1) : "";
+    }
+
+    private int extractSize(String dataString) {
+        Matcher matcher = Pattern.compile(sizeRegex).matcher(dataString);
+        return (matcher.find()) ? Integer.parseInt(matcher.group(1).replaceAll("\\s+", "")) : 0;
+    }
+
 }

@@ -11,10 +11,10 @@ public interface Crawler {
 
     Document getRawData();
 
+    Flat createFlat(Element element);
+
     void getFlats();
 
     void storeFlats();
-
-    Flat createFlat(Element element);
 
 }

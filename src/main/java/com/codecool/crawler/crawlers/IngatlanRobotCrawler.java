@@ -2,9 +2,7 @@ package com.codecool.crawler.crawlers;
 
 import com.codecool.crawler.AbstractCrawler;
 import com.codecool.model.Flat;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 
@@ -23,21 +21,6 @@ public class IngatlanRobotCrawler extends AbstractCrawler {
         sizeClass = "ads_list";
         districtClass = streetClass;
         sizeRegex = "(?<=ezer)(.*)(?=m²)";
-    }
-
-    @Override
-    public void getFlats() {
-        Document doc = getRawData();
-        Elements elements = doc.getElementsByClass(blockClass);
-
-        logger.info("{} blocks of data collected from {}", elements.size(), company);
-
-        for (int i = 0; i < elements.size(); i++) {
-            Flat flat = createFlat(elements.get(i));
-            flat.setAdUrl(company + getHref(doc, i));
-            blocks.add(flat);
-        }
-        storeFlats();
     }
 
     private int fixRentDecimals(int rent) {
