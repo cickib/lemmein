@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 @Service
 public abstract class AbstractCrawler implements Crawler {
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     private List<Flat> blocks = new ArrayList<>();
 
@@ -110,7 +110,7 @@ public abstract class AbstractCrawler implements Crawler {
     }
 
     private String normalizeUrl(String url) {
-        String prefixRegex = "(http:\\/\\/|https|www.)";
+        String prefixRegex = "(http://|https|www.)";
         if (!(url.contains(company))) {
             url = company + url;
         }
