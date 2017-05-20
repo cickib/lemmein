@@ -27,3 +27,4 @@ nbdist/
 *.iml
 target/
 *.log
+doc/
