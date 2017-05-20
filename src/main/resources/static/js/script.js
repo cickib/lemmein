@@ -1,13 +1,16 @@
 $(document).ready(function () {
-    $('#flatsTable').DataTable();
+    $("#flatsTable").DataTable();
 
-    $('.dataTable').on('click', 'tbody td', function () {
-        var url = this.textContent;
-        if (isLink(url)) {
-            window.location.href = url;
-        }
-    })
+    $(".dataTable").on("click mousedown", "tbody td", function () {
+        openHref(this.textContent);
+    });
 });
+
+var openHref = function (url) {
+    if (isLink(url)) {
+        window.open(url);
+    }
+};
 
 var isLink = function (url) {
     return containsPrefix(url, "://www.");
