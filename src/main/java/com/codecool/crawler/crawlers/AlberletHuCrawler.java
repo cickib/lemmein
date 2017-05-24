@@ -3,13 +3,11 @@ package com.codecool.crawler.crawlers;
 import com.codecool.crawler.AbstractCrawler;
 import com.codecool.model.Flat;
 import org.jsoup.nodes.Element;
-import org.springframework.stereotype.Service;
 
 
-@Service
 public class AlberletHuCrawler extends AbstractCrawler {
-    public AlberletHuCrawler() {
-        URL = "http://www.alberlet.hu/kiado_alberlet/berendezes:1/berleti-dij:1-120-ezer-ft/ingatlan-tipus:lakas/kerulet:v+vi+vii/megye:budapest/meret:28-50-m2/limit:48";
+    public AlberletHuCrawler(String rentFrom, String rentTo, String sizeFrom, String sizeTo, String[] districts) {
+        URL = createUrl(rentFrom, rentTo, sizeFrom, sizeTo, districts);
         company = "alberlet.hu";
         hrefClass = "advert__images";
         streetClass = "advert__street";
@@ -19,6 +17,19 @@ public class AlberletHuCrawler extends AbstractCrawler {
         districtClass = "advert__city";
         blockClass = "advert__details";
         sizeRegex = "(.*)(?= m2)";
+        System.out.println("URL = " + URL);
+    }
+
+    private String createUrl(String rentFrom, String rentTo, String sizeFrom, String sizeTo, String[] districts) {
+        String plus = "+";
+        String part1 = String.format("http://www.alberlet.hu/kiado_alberlet/berendezes:1/berleti-dij:%s-%s-ezer-ft/ingatlan-tipus:lakas/kerulet:", rentFrom, rentTo);
+        String part2 = "";
+        for (String district : districts) {
+            part2 += district + plus;
+        }
+        part2 = part2.replaceAll("\\+$", "");
+        String part3 = String.format("/megye:budapest/meret:%s-%s-m2/limit:48", sizeFrom, sizeTo);
+        return part1 + part2 + part3;
     }
 
     @Override
