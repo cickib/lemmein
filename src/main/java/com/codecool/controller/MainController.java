@@ -42,7 +42,7 @@ public class MainController {
     private List<Flat> collectAllFlats() {
         alberletHuCrawler.getFlats();
         ingatlanRobotCrawler.getFlats();
-        return flatRepository.findAll();
+        return flatRepository.findAllByOrderByDate();
     }
-    
+
 }

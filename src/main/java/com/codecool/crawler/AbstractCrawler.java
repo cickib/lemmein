@@ -23,7 +23,7 @@ public abstract class AbstractCrawler implements Crawler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    private List<Flat> blocks = new ArrayList<>();
+    protected static List<Flat> blocks = new ArrayList<>();
 
     protected String company;
     protected String URL;
@@ -104,7 +104,7 @@ public abstract class AbstractCrawler implements Crawler {
         return Integer.parseInt(element.text().replaceAll("\\D+", ""));
     }
 
-    private String getHref(Document doc, int i) {
+    protected String getHref(Document doc, int i) {
         String url = doc.getElementsByClass(hrefClass).get(i).select("a").first().attr("href");
         return normalizeUrl(url);
     }
@@ -127,7 +127,7 @@ public abstract class AbstractCrawler implements Crawler {
 
     private int extractSize(String dataString) {
         Matcher matcher = Pattern.compile(sizeRegex).matcher(dataString);
-        return (matcher.find()) ? Integer.parseInt(matcher.group(1).replaceAll("\\s+", "")) : 0;
+        return (matcher.find()) ? Integer.parseInt(matcher.group(1).replaceAll("\\D+", "").replaceAll("\\s+", "")) : 0;
     }
 
 }

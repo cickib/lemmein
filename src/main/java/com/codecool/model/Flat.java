@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 
 @Entity
@@ -31,5 +32,14 @@ public class Flat {
     @Column(unique = true)
     @NotNull
     private String adUrl;
+
+    @NotNull
+    private Status status = Status.NEW;
+
+    @NotNull
+    private Date date = new Date();
+
+    @NotNull
+    private boolean interested = false;
 
 }
