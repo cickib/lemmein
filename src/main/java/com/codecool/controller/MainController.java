@@ -36,8 +36,6 @@ public class MainController {
     @Autowired
     private CrawlerFactory factory;
 
-    private AlberletHuCrawler alberletHuCrawler;
-
     @GetMapping(value = "/")
     public String index() {
         logger.info("'/' route called - method: {}.", RequestMethod.GET);

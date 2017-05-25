@@ -1,9 +1,4 @@
 $(document).ready(function () {
-    $("#flatsTable").DataTable();
-
-    $(".dataTable").on("click mousedown", "tbody td", function () {
-        openHref(this.textContent);
-    });
 
     $("#dAll").click(function () {
         checkAll(this);
@@ -33,8 +28,8 @@ $(document).ready(function () {
             }),
             contentType: "application/json; charset=utf-8"
         });
-        scrollToMatches();
         getResults();
+        scrollToMatches();
     });
 });
 
@@ -57,23 +52,6 @@ var getChecked = function (name) {
 
 var selectorify = function (id) {
     return "#" + id;
-};
-
-
-// checking, creating, opening valid links
-
-var openHref = function (url) {
-    if (isLink(url)) {
-        window.open(url);
-    }
-};
-
-var isLink = function (url) {
-    return containsPrefix(url, "://www.");
-};
-
-var containsPrefix = function (url, prefix) {
-    return url.indexOf(prefix) >= 0
 };
 
 
@@ -105,23 +83,21 @@ var scrollToMatches = function () {
 
 var getResults = function () {
     $.getJSON("/results", function (data) {
-        console.log(data["flats"])
-        console.log(data["flats"].length)
-        for (var i = 0; i < data["flats"].length; i++) {
-            var flat = data["flats"][i];
-            console.log("flat " + flat)
-            $('#flatsTable > tbody:last-child').append(createFlatRecord(flat));
-        }
+        $('#flatsTable').DataTable({
+            data: data["flats"],
+            "columns": [
+                { "data": "id" },
+                { "data": "squareMeter" },
+                { "data": "rent" },
+                { "data": "district"
+                },
+                { "data": "address" },
+                { "data": "adUrl" ,
+                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        $(nTd).html("<a class='td-url' href='"+oData.adUrl+"'>Checkout!</a>");
+                    }},
+                { "data": "company" },
+            ]
+        });
     });
-};
-
-var createFlatRecord = function (flat) {
-    console.log(flat.adUrl)
-    return "<tr>" +
-        "<td >" + flat.id + "</td>" +
-        "<td>" + flat.squareMeter + "</td>" +
-        "<td>" + flat.rent + "</td>" +
-        "<td>" + flat.district + " | " + flat.address + "</td>" +
-        "<td><a class='td-url'>" + flat.adUrl + "</a></td>" +
-        "<td>" + flat.company + "</td></tr>";
 };

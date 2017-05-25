@@ -15,23 +15,23 @@ public class Flat {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    private String address;
-
     @NotNull
     private int squareMeter;
-
-    @NotNull
-    private String district;
 
     @NotNull
     private int rent;
 
     @NotNull
-    private String company;
+    private String district;
+
+    private String address;
 
     @Column(unique = true)
     @NotNull
     private String adUrl;
+
+    @NotNull
+    private String company;
 
     @NotNull
     private Status status = Status.NEW;
