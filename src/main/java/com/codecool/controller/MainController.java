@@ -1,5 +1,7 @@
 package com.codecool.controller;
 
+import com.codecool.crawler.Company;
+import com.codecool.crawler.CrawlerFactory;
 import com.codecool.crawler.crawlers.AlberletHuCrawler;
 import com.codecool.crawler.crawlers.IngatlanRobotCrawler;
 import com.codecool.model.Flat;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -21,10 +24,11 @@ public class MainController {
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
     @Autowired
     protected FlatRepository flatRepository;
+
+    private static List<Company> companies = Arrays.asList(Company.values());
+
     @Autowired
-    private AlberletHuCrawler alberletHuCrawler;
-    @Autowired
-    private IngatlanRobotCrawler ingatlanRobotCrawler;
+    private CrawlerFactory factory;
 
     @GetMapping(value = "/")
     public String index() {
@@ -40,8 +44,7 @@ public class MainController {
     }
 
     private List<Flat> collectAllFlats() {
-        alberletHuCrawler.getFlats();
-        ingatlanRobotCrawler.getFlats();
+        companies.forEach(company -> factory.getCrawler(company).getFlats());
         return flatRepository.findAllByOrderByDate();
     }
 
