@@ -13,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -52,64 +52,36 @@ public class MainController {
         return flatRepository.findAllByOrderByDate();
     }
 
-    @GetMapping(value = "/search")
-    public String search() {
-        return "search";
-    }
+    @GetMapping(value = "/results")
+    @ResponseBody
+    public String results() throws JSONException {
+        logger.info("'/results' route called - method: {}.", RequestMethod.GET);
+        JSONArray jsonArray = null;
 
-    @PostMapping(value = "/search")
-    public String getSearchParams(@RequestBody String data) {
-        System.out.println("data = " + data);
-        try {
-            JSONObject json = new JSONObject(data);
-
-            String rentFrom = json.getString("rentFrom");
-            String rentTo = json.getString("rentTo");
-            String sizeFrom = json.getString("sizeFrom");
-            String sizeTo = json.getString("sizeTo");
-            JSONArray districts = json.getJSONArray("district");
-            String[] districtArray = new String[districts.length()];
-
-            for (int i = 0; i < districts.length(); i++) {
-                districtArray[i] = convertNum(Integer.parseInt(districts.get(i).toString().replaceAll("\\D+", "")));
-            }
-
-            alberletHuCrawler = new AlberletHuCrawler(rentFrom, rentTo, sizeFrom, sizeTo, districtArray);
-
-        } catch (JSONException e) {
-            logger.error("{} occurred while creating json from incoming data. Details: {}", e.getCause(), e.getMessage());
+        if (collectAllFlats().size() > 0) {
+            logger.info("{} flats collected.", collectAllFlats().size());
+            List<JSONObject> js = collectAllFlats()
+                    .stream()
+                    .map(this::createJsonFromFlat)
+                    .collect(Collectors.toList());
+            jsonArray = new JSONArray(js);
         }
-        return "dashboard";
+
+        return new JSONObject().put("flats", jsonArray).toString();
     }
 
-    private String convertNum(int num) {
-        return romanNumerals.get(num);
+    private JSONObject createJsonFromFlat(Flat flat) {
+        JSONObject json = new JSONObject();
+        List<Field> fields = Arrays.asList(Flat.class.getDeclaredFields()).subList(0, 7);
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                json.put(field.getName(), field.get(flat));
+            }
+        } catch (IllegalAccessException | JSONException ignored) {
+            logger.error("Ignored {}: occurred while trying to collect profile data {}", ignored.getClass().getSimpleName(), ignored.getMessage());
+        }
+        return json;
     }
-
-    private Map<Integer, String> romanNumerals = new HashMap<Integer, String>() {{
-        put(1, "i");
-        put(2, "ii");
-        put(3, "iii");
-        put(4, "iv");
-        put(5, "v");
-        put(6, "vi");
-        put(71, "vii");
-        put(8, "viii");
-        put(9, "ix");
-        put(10, "x");
-        put(11, "xi");
-        put(12, "xii");
-        put(13, "xiii");
-        put(14, "xiv");
-        put(15, "xv");
-        put(16, "xvi");
-        put(17, "xvii");
-        put(18, "xviii");
-        put(19, "xix");
-        put(20, "xx");
-        put(21, "xi");
-        put(22, "xii");
-        put(23, "xiii");
-    }};
 
 }
