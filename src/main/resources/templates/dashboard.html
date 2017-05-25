@@ -1,45 +1,31 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="lemmein">
 <head>
     <meta charset="UTF-8">
     <title>DASHBOARD</title>
 
     <div th:replace="fragments/styles :: copy"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
+    <script src="/js/controller/searchController.js"></script>
+
 </head>
-<body>
+<body ng-controller="searchController">
 
 <div th:replace="fragments/navbar :: copy"></div>
 
-<div class="container fluid">
+<div class="container fluid main">
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <h1>FLATS <i class="fa fa-building-o" aria-hidden="true"></i></h1>
-            <table class="table table-hover" id="flatsTable">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>SQUAREMETER</th>
-                    <th>RENT/MONTH</th>
-                    <th>ADDRESS</th>
-                    <th>URL</th>
-                    <th>COMPANY</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="flat, iterStat : ${flats}">
-                    <td th:text="${flat.id}">id</td>
-                    <td th:text="${flat.squareMeter}">Négyzetméter</td>
-                    <td th:text="${flat.rent}">Bérleti díj/hó</td>
-                    <td th:text="${flat.district +' | '+ flat.address}">Cím</td>
-                    <td><a class="td-url" th:text="${flat.adUrl}"></a></td>
-                    <td th:text="${flat.company}">Company</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-2"></div>
+
+        <div th:replace="fragments/search_bar :: copy"></div>
+
+        <br>
+        <hr>
+        <br>
+
+        <div th:replace="fragments/results :: copy"></div>
+
     </div>
 </div>
 <div th:replace="fragments/footer :: copy"></div>
