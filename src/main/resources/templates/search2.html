@@ -1,0 +1,60 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>DASHBOARD</title>
+
+    <div th:replace="fragments/styles :: copy"></div>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: copy"></div>
+
+<div class="container fluid">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <h1>FLATS <i class="fa fa-building-o" aria-hidden="true"></i></h1>
+<div class="row">
+    <form class="form" id="searchForm">
+    <div class="col-md-4">
+        <div class ="input-group">
+            <label for="rent">Rent:</label>
+            <input type="text" id="rent">
+
+            <div id="rentRange"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class ="input-group">
+            <label for="size">Squaremeters:</label>
+            <input type="text" id="size">
+            <div id="sizeRange"></div>
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+        <button id="submitSearch">submit</button>
+
+    </form>
+
+</div>
+
+
+
+
+
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: copy"></div>
+<div th:replace="fragments/scripts :: copy"></div>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="../js/search.js"></script>
+</body>
+</html>

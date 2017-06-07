@@ -1,6 +1,6 @@
 'use strict';
 
-var lemmein = angular.module('lemmein', ['ngResource', 'gm']);
+var lemmein = angular.module('lemmein', []);
 lemmein.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
