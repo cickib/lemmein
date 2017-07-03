@@ -14,9 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -32,6 +30,9 @@ public class MainController {
     protected FlatRepository flatRepository;
 
     private static List<Company> companies = Arrays.asList(Company.values());
+
+    @Autowired
+    private FlatUtil flatUtil;
 
     @Autowired
     private CrawlerFactory factory;
@@ -64,7 +65,7 @@ public class MainController {
             logger.info("{} flats collected.", collectAllFlats().size());
             List<JSONObject> js = collectAllFlats()
                     .stream()
-                    .map(this::createJsonFromFlat)
+                    .map(flat ->flatUtil.createJsonFromFlat(flat))
                     .collect(Collectors.toList());
             jsonArray = new JSONArray(js);
         }
@@ -72,18 +73,13 @@ public class MainController {
         return new JSONObject().put("flats", jsonArray).toString();
     }
 
-    private JSONObject createJsonFromFlat(Flat flat) {
-        JSONObject json = new JSONObject();
-        List<Field> fields = Arrays.asList(Flat.class.getDeclaredFields()).subList(0, 7);
-        try {
-            for (Field field : fields) {
-                field.setAccessible(true);
-                json.put(field.getName(), field.get(flat));
-            }
-        } catch (IllegalAccessException | JSONException ignored) {
-            logger.error("Ignored {}: occurred while trying to collect profile data {}", ignored.getClass().getSimpleName(), ignored.getMessage());
-        }
-        return json;
-    }
 
+    @PostMapping(value = "/search")
+    @ResponseBody
+    public String getParams(@RequestBody String data) throws JSONException, IllegalAccessException {
+        FlatUtil.FlatParam flatParam = flatUtil.getData(new JSONObject(data));
+        System.out.println(flatParam);
+        System.out.println(data);
+        return "ok";
+    }
 }

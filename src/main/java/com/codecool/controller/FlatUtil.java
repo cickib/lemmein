@@ -1,5 +1,6 @@
 package com.codecool.controller;
 
+import com.codecool.model.Flat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,21 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class FlatUtil {
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
+
+    protected JSONObject createJsonFromFlat(Flat flat) {
+        JSONObject json = new JSONObject();
+        List<Field> fields = Arrays.asList(Flat.class.getDeclaredFields()).subList(0, 7);
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                json.put(field.getName(), field.get(flat));
+            }
+        } catch (IllegalAccessException | JSONException ignored) {
+            logger.error("Ignored {}: occurred while trying to collect profile data: {}", ignored.getClass().getSimpleName(), ignored.getMessage());
+        }
+        return json;
+    }
 
     protected FlatParam getData(JSONObject json) throws IllegalAccessException {
         return extractData(json);
