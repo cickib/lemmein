@@ -31,6 +31,7 @@ public class CrawlerFactory {
                 alberletHuCrawler.setURL(alberletHuCrawler.createUrl(flatParam));
                 return alberletHuCrawler;
             case INGATLANROBOT:
+                ingatlanRobotCrawler.setURL(ingatlanRobotCrawler.createUrl(flatParam));
                 return ingatlanRobotCrawler;
             default:
                 return null;

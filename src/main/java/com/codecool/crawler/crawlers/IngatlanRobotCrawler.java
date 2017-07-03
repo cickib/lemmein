@@ -2,6 +2,7 @@ package com.codecool.crawler.crawlers;
 
 import com.codecool.crawler.AbstractCrawler;
 import com.codecool.model.Flat;
+import com.codecool.util.FlatParam;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,6 @@ public class IngatlanRobotCrawler extends AbstractCrawler {
     private String streetRegex = "(I )";
 
     public IngatlanRobotCrawler() {
-        URL = "https://www.ingatlanrobot.hu/ingatlanok/kiado-lakas--varos=Budapest--varosresz=Ter%C3%A9zv%C3%A1ros,Erzs%C3%A9betv%C3%A1ros,Lip%C3%B3tv%C3%A1ros--ar=1-120--terulet=28-/";
         company = "ingatlanrobot.hu";
         blockClass = "main_normal_ad";
         hrefClass = "ads_img_main_box";
@@ -21,6 +21,19 @@ public class IngatlanRobotCrawler extends AbstractCrawler {
         sizeClass = "ads_list";
         districtClass = streetClass;
         sizeRegex = "(?<=ezer)(.*)(?=m²)";
+    }
+
+    public String createUrl(FlatParam flatParam) {
+        try {
+            return "https://www.ingatlanrobot.hu/ingatlanok/kiado-lakas--varos=Budapest--varosresz=" +
+                    "Ter%C3%A9zv%C3%A1ros,Erzs%C3%A9betv%C3%A1ros,Lip%C3%B3tv%C3%A1ros--ar=" +
+                    flatParam.getRentFrom() / 1000 + "-" + flatParam.getRentTo() / 1000 +
+                    "--terulet=" + flatParam.getSizeFrom() + "-" + flatParam.getSizeTo() + "/";
+
+        } catch (NullPointerException npe) {
+            return "https://www.ingatlanrobot.hu/ingatlanok/kiado-lakas--varos=Budapest--ar=--terulet=/";
+
+        }
     }
 
     private int fixRentDecimals(int rent) {
@@ -41,5 +54,4 @@ public class IngatlanRobotCrawler extends AbstractCrawler {
 
         return flat;
     }
-
 }
