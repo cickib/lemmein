@@ -3,6 +3,7 @@ package com.codecool.crawler;
 
 import com.codecool.crawler.crawlers.AlberletHuCrawler;
 import com.codecool.crawler.crawlers.IngatlanRobotCrawler;
+import com.codecool.util.FlatParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +25,13 @@ public class CrawlerFactory {
      * @param company enum representation of website name
      * @return specified implementation of Crawler
      */
-    public Crawler getCrawler(Company company) {
+    public Crawler getCrawler(Company company, FlatParam flatParam) {
         switch (company) {
             case ALBERLETHU:
+                alberletHuCrawler.setURL(alberletHuCrawler.createUrl(flatParam));
                 return alberletHuCrawler;
             case INGATLANROBOT:
+                ingatlanRobotCrawler.setURL(ingatlanRobotCrawler.createUrl(flatParam));
                 return ingatlanRobotCrawler;
             default:
                 return null;

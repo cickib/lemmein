@@ -23,8 +23,8 @@ $(document).ready(function () {
                 "rentTo": rentTo,
                 "sizeFrom": sizeFrom,
                 "sizeTo": sizeTo,
-                "district": getChecked("district"),
-                "site": getChecked("site")
+                "districts": getChecked("district"),
+                "sites": getChecked("site")
             }),
             contentType: "application/json; charset=utf-8"
         });
