@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -44,16 +45,29 @@ public class FlatUtil {
             }
             field.set(flatParam, fieldVal);
         }
-        flatParam.setDistricts(extractList(json, "district").stream().map(Integer::parseInt).collect(Collectors.toList()));
+        flatParam.setDistricts(extractList(json, "districts")
+                .stream()
+                .map(d -> d.replace("d", ""))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList()));
         flatParam.setSites(extractList(json, "sites"));
-        return  flatParam;
+        return flatParam;
     }
 
     private List<String> extractList(JSONObject json, String key) {
         List<String> extracted = new ArrayList<>();
         try {
             JSONArray jsonArray = json.getJSONArray(key);
-            extracted = Arrays.asList(jsonArray.join(",").replaceAll("\"", "").split(","));
+            extracted = Arrays.asList(jsonArray
+                    .join(",")
+                    .replaceAll("\"", "")
+                    .split(","));
+
+            Pattern pattern = Pattern.compile(".All");
+            extracted = extracted
+                    .stream()
+                    .filter(pattern.asPredicate().negate())
+                    .collect(Collectors.toList());
         } catch (JSONException e) {
             logger.error("{} occurred while trying to extract {}: {}", e.getClass().getSimpleName(), key, e.getMessage());
         }
