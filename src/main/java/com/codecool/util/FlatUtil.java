@@ -120,4 +120,8 @@ public class FlatUtil {
         }
     }
 
+    public static Roman getRomanDistrict(int district) {
+        return Roman.values()[district - 1];
+    }
+
 }
