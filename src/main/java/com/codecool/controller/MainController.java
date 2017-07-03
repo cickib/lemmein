@@ -1,11 +1,10 @@
 package com.codecool.controller;
 
-import com.codecool.crawler.Company;
 import com.codecool.crawler.CrawlerFactory;
-import com.codecool.crawler.crawlers.AlberletHuCrawler;
-import com.codecool.crawler.crawlers.IngatlanRobotCrawler;
 import com.codecool.model.Flat;
 import com.codecool.repository.FlatRepository;
+import com.codecool.util.FlatParam;
+import com.codecool.util.FlatUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,9 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,13 +27,13 @@ public class MainController {
     @Autowired
     protected FlatRepository flatRepository;
 
-    private static List<Company> companies = Arrays.asList(Company.values());
-
     @Autowired
     private FlatUtil flatUtil;
 
     @Autowired
     private CrawlerFactory factory;
+
+    private FlatParam flatParam;
 
     @GetMapping(value = "/")
     public String index() {
@@ -51,7 +49,6 @@ public class MainController {
     }
 
     private List<Flat> collectAllFlats() {
-        companies.forEach(company -> factory.getCrawler(company).getFlats());
         return flatRepository.findAllByOrderByDate();
     }
 
@@ -65,7 +62,7 @@ public class MainController {
             logger.info("{} flats collected.", collectAllFlats().size());
             List<JSONObject> js = collectAllFlats()
                     .stream()
-                    .map(flat ->flatUtil.createJsonFromFlat(flat))
+                    .map(flat -> flatUtil.createJsonFromFlat(flat))
                     .collect(Collectors.toList());
             jsonArray = new JSONArray(js);
         }
@@ -73,13 +70,11 @@ public class MainController {
         return new JSONObject().put("flats", jsonArray).toString();
     }
 
-
     @PostMapping(value = "/search")
     @ResponseBody
-    public String getParams(@RequestBody String data) throws JSONException, IllegalAccessException {
-        FlatUtil.FlatParam flatParam = flatUtil.getData(new JSONObject(data));
-        System.out.println(flatParam);
-        System.out.println(data);
-        return "ok";
+    public RedirectView getParams(@RequestBody String data) throws JSONException, IllegalAccessException {
+        flatParam = flatUtil.extractData(new JSONObject(data));
+        flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
+        return new RedirectView("dashboard");
     }
 }

@@ -2,6 +2,7 @@ package com.codecool.crawler;
 
 import com.codecool.model.Flat;
 import com.codecool.repository.FlatRepository;
+import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 
 
 @Service
+@Setter
 public abstract class AbstractCrawler implements Crawler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
