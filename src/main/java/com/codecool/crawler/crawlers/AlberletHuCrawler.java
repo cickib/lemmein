@@ -26,18 +26,18 @@ public class AlberletHuCrawler extends AbstractCrawler {
 
     public String createUrl(FlatParam flatParam) {
         try {
+            String[] params = checkParams(flatParam);
             return String.format(
                     "http://www.alberlet.hu/kiado_alberlet/berendezes:1/berleti-dij:%s-%s-ezer-ft/" +
                             "ingatlan-tipus:lakas/kerulet:%s/megye:budapest/meret:%s-%s-m2/limit:48",
-                    flatParam.getRentFrom() / 1000, flatParam.getRentTo() / 1000, concatDistricts(flatParam),
-                    flatParam.getSizeFrom(), flatParam.getSizeTo());
-        } catch (NullPointerException npe) {
+                    params[0], params[1], concatDistricts(flatParam),
+                    params[2], params[3]);
+        } catch (Exception e) {
             return "https://www.alberlet.hu/kiado_alberlet/ingatlan-tipus:lakas/megye:budapest/limit:48";
-
         }
     }
 
-    private String concatDistricts(FlatParam flatParam) {
+    protected String concatDistricts(FlatParam flatParam) {
         String districts = "";
         for (int district : flatParam.getDistricts()) {
             districts += "+" + FlatUtil.getRomanDistrict(district).toString().toLowerCase();
@@ -45,9 +45,18 @@ public class AlberletHuCrawler extends AbstractCrawler {
         return districts.replaceFirst("\\+", "");
     }
 
+    private String extractDistrict(Element element) {
+        String district = getElementText(element, districtClass).replaceAll("\\s+", "");
+        String[] splittedStr = district.split("\\W+");
+        return (splittedStr.length > 1) ? splittedStr[1] : "N/A";
+    }
+
     @Override
     public Flat createFlat(Element element) {
         Flat flat = super.createFlat(element);
+
+        String district = extractDistrict(element);
+        flat.setDistrict(district);
 
         int rent = getRent(element);
         flat.setRent(rent);

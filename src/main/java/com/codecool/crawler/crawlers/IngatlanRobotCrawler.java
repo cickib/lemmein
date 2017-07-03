@@ -26,17 +26,17 @@ public class IngatlanRobotCrawler extends AbstractCrawler {
 
     public String createUrl(FlatParam flatParam) {
         try {
+            String[] params = checkParams(flatParam);
             return "https://www.ingatlanrobot.hu/ingatlanok/kiado-lakas--varos=" +
-                    concatDistricts(flatParam) + "--ar=" +
-                    flatParam.getRentFrom() / 1000 + "-" + flatParam.getRentTo() / 1000 +
-                    "--terulet=" + flatParam.getSizeFrom() + "-" + flatParam.getSizeTo() + "/";
-        } catch (NullPointerException npe) {
+                    concatDistricts(flatParam) +
+                    "--ar=" + params[0] + "-" + params[1] +
+                    "--terulet=" + params[2] + "-" + params[3] + "/";
+        } catch (Exception e) {
             return "https://www.ingatlanrobot.hu/ingatlanok/kiado-lakas--varos=Budapest--ar=--terulet=/";
-
         }
     }
 
-    private String concatDistricts(FlatParam flatParam) {
+    protected String concatDistricts(FlatParam flatParam) {
         String districts = "";
         for (int district : flatParam.getDistricts()) {
             districts += ",";
@@ -50,9 +50,18 @@ public class IngatlanRobotCrawler extends AbstractCrawler {
         return ((long) (Math.log10(rent) + 1) == 6) ? rent : rent * 10;
     }
 
+    private String extractDistrict(Element element) {
+        String district = getElementText(element, districtClass);
+        String[] splittedStr = district.split("\\s+");
+        return (splittedStr.length > 1) ? splittedStr[3] : "N/A";
+    }
+
     @Override
     public Flat createFlat(Element element) {
         Flat flat = super.createFlat(element);
+
+        String district = extractDistrict(element);
+        flat.setDistrict(district);
 
         int rent = getRent(element);
         flat.setRent(fixRentDecimals(rent));

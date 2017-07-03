@@ -2,6 +2,7 @@ package com.codecool.crawler;
 
 import com.codecool.model.Flat;
 import com.codecool.repository.FlatRepository;
+import com.codecool.util.FlatParam;
 import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,14 +24,11 @@ import java.util.regex.Pattern;
 @Setter
 public abstract class AbstractCrawler implements Crawler {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
-
     protected static List<Flat> blocks = new ArrayList<>();
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
     protected String company;
     protected String URL;
     protected String hrefClass;
-
     protected String streetClass;
     protected String addressClass;
     protected String rentClass;
@@ -39,9 +37,19 @@ public abstract class AbstractCrawler implements Crawler {
     protected String districtRegex = "(VII|VI|V)";
     protected String blockClass;
     protected String sizeRegex;
-
     @Autowired
     private FlatRepository flatRepository;
+
+    protected String[] checkParams(FlatParam flatParam) {
+        String rentFrom = (flatParam.getRentFrom() > 0) ? String.valueOf(flatParam.getRentFrom() / 1000) : "";
+        String rentTo = (flatParam.getRentTo() > 0 && flatParam.getRentTo() >= Integer.parseInt(rentFrom)) ? String.valueOf(flatParam.getRentTo() / 1000) : "";
+        String sizeFrom = (flatParam.getSizeFrom() > 0) ? String.valueOf(flatParam.getSizeFrom()) : "";
+        String sizeTo = (flatParam.getSizeFrom() > 0 && flatParam.getSizeTo() >= Integer.parseInt(sizeFrom)) ? String.valueOf(flatParam.getSizeTo()) : "";
+        return new String[]{rentFrom, rentTo, sizeFrom, sizeTo};
+
+    }
+
+    protected abstract String concatDistricts(FlatParam flatParam);
 
     @Override
     public Document getRawData() {
@@ -59,9 +67,6 @@ public abstract class AbstractCrawler implements Crawler {
     public Flat createFlat(Element element) {
         Flat flat = new Flat();
         flat.setCompany(company);
-
-        String district = extractDistrict(element);
-        flat.setDistrict(district);
 
         String sizeString = getElementText(element, sizeClass);
         flat.setSquareMeter(extractSize(sizeString));
@@ -119,12 +124,6 @@ public abstract class AbstractCrawler implements Crawler {
         String prefix = "https://www.";
         Matcher matcher = Pattern.compile(prefixRegex).matcher(url);
         return (matcher.find()) ? url : (prefix + url);
-    }
-
-    private String extractDistrict(Element element) {
-        String district = getElementText(element, districtClass).replaceAll("\\s+", "");
-        Matcher matcher = Pattern.compile(districtRegex).matcher(district);
-        return (matcher.find()) ? matcher.group(1) : "";
     }
 
     private int extractSize(String dataString) {
