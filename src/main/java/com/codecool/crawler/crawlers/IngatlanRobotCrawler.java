@@ -3,6 +3,7 @@ package com.codecool.crawler.crawlers;
 import com.codecool.crawler.AbstractCrawler;
 import com.codecool.model.Flat;
 import com.codecool.util.FlatParam;
+import com.codecool.util.FlatUtil;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 
@@ -25,15 +26,23 @@ public class IngatlanRobotCrawler extends AbstractCrawler {
 
     public String createUrl(FlatParam flatParam) {
         try {
-            return "https://www.ingatlanrobot.hu/ingatlanok/kiado-lakas--varos=Budapest--varosresz=" +
-                    "Ter%C3%A9zv%C3%A1ros,Erzs%C3%A9betv%C3%A1ros,Lip%C3%B3tv%C3%A1ros--ar=" +
+            return "https://www.ingatlanrobot.hu/ingatlanok/kiado-lakas--varos=" +
+                    concatDistricts(flatParam) + "--ar=" +
                     flatParam.getRentFrom() / 1000 + "-" + flatParam.getRentTo() / 1000 +
                     "--terulet=" + flatParam.getSizeFrom() + "-" + flatParam.getSizeTo() + "/";
-
         } catch (NullPointerException npe) {
             return "https://www.ingatlanrobot.hu/ingatlanok/kiado-lakas--varos=Budapest--ar=--terulet=/";
 
         }
+    }
+
+    private String concatDistricts(FlatParam flatParam) {
+        String districts = "";
+        for (int district : flatParam.getDistricts()) {
+            districts += ",";
+            districts += "Budapest-" + FlatUtil.getRomanDistrict(district) + "-kerulet";
+        }
+        return districts.replaceFirst(",", "");
     }
 
     private int fixRentDecimals(int rent) {
