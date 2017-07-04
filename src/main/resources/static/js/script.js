@@ -86,17 +86,20 @@ var getResults = function () {
         $('#flatsTable').DataTable({
             data: data["flats"],
             "columns": [
-                { "data": "id" },
-                { "data": "squareMeter" },
-                { "data": "rent" },
-                { "data": "district"
+                {"data": "id"},
+                {"data": "squareMeter"},
+                {"data": "rent"},
+                {
+                    "data": "district"
                 },
-                { "data": "address" },
-                { "data": "adUrl" ,
+                {"data": "address"},
+                {
+                    "data": "adUrl",
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                        $(nTd).html("<a class='td-url' href='"+oData.adUrl+"'>Checkout!</a>");
-                    }},
-                { "data": "company" },
+                        $(nTd).html("<a class='td-url' href='" + oData.adUrl + "'>Checkout!</a>");
+                    }
+                },
+                {"data": "company"}
             ]
         });
     });
