@@ -29,8 +29,27 @@ import java.util.stream.IntStream;
 public class FlatUtil {
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
+    public String collectFlatsToJson(List<Flat> flats) {
+        JSONObject result = new JSONObject();
+        JSONArray jsonArray = null;
 
-    public JSONObject createJsonFromFlat(Flat flat) {
+        if (flats.size() > 0) {
+            logger.info("{} flats collected.", flats.size());
+            List<JSONObject> js = flats
+                    .stream()
+                    .map(this::createJsonFromFlat)
+                    .collect(Collectors.toList());
+            jsonArray = new JSONArray(js);
+        }
+        try {
+            result.put("flats", jsonArray);
+        } catch (JSONException e) {
+            logger.error("{} occurred while collecting flats to json: {}", e.getClass().getSimpleName(), e.getMessage());
+        }
+        return result.toString();
+    }
+
+    private JSONObject createJsonFromFlat(Flat flat) {
         JSONObject json = new JSONObject();
         List<Field> fields = Arrays.asList(Flat.class.getDeclaredFields()).subList(0, 7);
         try {

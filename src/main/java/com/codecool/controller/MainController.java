@@ -5,19 +5,16 @@ import com.codecool.model.Flat;
 import com.codecool.repository.FlatRepository;
 import com.codecool.util.FlatParam;
 import com.codecool.util.FlatUtil;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -42,9 +39,8 @@ public class MainController {
     }
 
     @GetMapping(value = "/dashboard")
-    public String dashboard(Model model) {
+    public String dashboard() {
         logger.info("'/dashboard' route called - method: {}.", RequestMethod.GET);
-        model.addAttribute("flats", collectAllFlats());
         return "dashboard";
     }
 
@@ -56,25 +52,20 @@ public class MainController {
     @ResponseBody
     public String results() throws JSONException {
         logger.info("'/results' route called - method: {}.", RequestMethod.GET);
-        JSONArray jsonArray = null;
-
-        if (collectAllFlats().size() > 0) {
-            logger.info("{} flats collected.", collectAllFlats().size());
-            List<JSONObject> js = collectAllFlats()
-                    .stream()
-                    .map(flat -> flatUtil.createJsonFromFlat(flat))
-                    .collect(Collectors.toList());
-            jsonArray = new JSONArray(js);
-        }
-
-        return new JSONObject().put("flats", jsonArray).toString();
+        return flatUtil.collectFlatsToJson(collectAllFlats());
     }
 
     @PostMapping(value = "/search")
     @ResponseBody
-    public RedirectView getParams(@RequestBody String data) throws JSONException, IllegalAccessException {
+    public RedirectView getSearchParams(@RequestBody String data) throws JSONException, IllegalAccessException {
         flatParam = flatUtil.extractData(new JSONObject(data));
         flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
         return new RedirectView("dashboard");
+    }
+
+
+    @GetMapping(value = "/display")
+    public String angular() {
+        return "display_flats";
     }
 }
