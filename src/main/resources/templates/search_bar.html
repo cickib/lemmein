@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>BudapestFlatFinder</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/footer.css"/>
+</head>
+<body>
+
+<div class="container fluid main">
+    <div class="row main">
+        <div ng-app='BpFF' ng-controller='SearchCtrl'>
+            <h1>SEARCH <span class="glyphicon glyphicon-search"></span></h1>
+            <form class="form-horizontal" id="searchForm" name="searchForm" ng-submit="search(searchForm)">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="form-group">
+                            <p>Rent:</p>
+                            <label class="col-sm-2" for="rentFrom">From:</label>
+                            <input class="col-sm-4" id="rentFrom" type="number" min="0" max="300" value="60"
+                                   ng-model="params.rentFrom">
+                            <label class="col-sm-2" for="rentTo">To:</label>
+                            <input class="col-sm-4" id="rentTo" type="number" min="0" max="300" value="120"
+                                   ng-model="params.rentTo">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="form-group">
+                            <p>Size:</p>
+                            <label class="col-sm-2" for="sizeFrom">From:</label>
+                            <input class="col-sm-4" id="sizeFrom" type="number" min="0" max="200" value="28"
+                                   ng-model="params.sizeFrom">
+                            <label class="col-sm-2" for="sizeTo">To:</label>
+                            <input class="col-sm-4" id="sizeTo" type="number" min="0" max="200" value="45"
+                                   ng-model="params.sizeTo">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="row">
+
+                        <div class="form-group">
+                            <p>District:</p>
+                            <input type="checkbox" name="districts"> all</input>
+                            <br>
+                            <input type="checkbox" name="districts" ng-model="params.districts.1"> I.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.2"> II.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.3"> III.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.4"> IV.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.5"> V.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.6"> VI.</input>
+                            <br>
+                            <input type="checkbox" name="districts" ng-model="params.districts.7"> VII.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.8"> VIII.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.9"> IX.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.10"> X.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.11"> XI.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.12"> XII.</input>
+                            <br>
+                            <input type="checkbox" name="districts" ng-model="params.districts.13"> XIII.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.14"> XIV.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.15"> XV.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.16"> XVI.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.17"> XVII.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.18"> XVIII.</input>
+                            <br>
+                            <input type="checkbox" name="districts" ng-model="params.districts.19"> XIX.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.20"> XX.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.21"> XI.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.22"> XII.</input>
+                            <input type="checkbox" name="districts" ng-model="params.districts.23"> XIII.</input>
+                        </div>
+                        <div class="form-group">
+                            <p>Sites:</p>
+                            <input type="checkbox" name="sites"> all</input>
+                            <br>
+                            <input type="checkbox" name="sites" ng-model="params.sites.ALBERLETHU"> alberlet.hu</input>
+                            <input type="checkbox" name="sites" ng-model="params.sites.INGATLANROBOT">
+                            ingatlanrobot.hu</input>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="searchBtn" ng-click="search()">SEARCH
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="copyright">
+    <div class="container">
+        <div class="col-md-6">
+            <p>© 2017 - All Rights reserved</p>
+        </div>
+        <div class="col-md-6">
+            <ul class="bottom_ul">
+                <li><a href="//github.com/cickib"><i class="fa fa-github" aria-hidden="true"></i> GitHub
+                    profile</a></li>
+                <li><a href="#">About the project</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/7c224a1209.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js" type="text/javascript"></script>
+<script src="js/app.js" type="text/javascript"></script>
+<script src="js/controller/searchCtrl.js" type="text/javascript"></script>
+</body>
+</html>

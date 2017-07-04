@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -57,12 +56,16 @@ public class MainController {
 
     @PostMapping(value = "/search")
     @ResponseBody
-    public RedirectView getSearchParams(@RequestBody String data) throws JSONException, IllegalAccessException {
+    public String getSearchParams(@RequestBody String data) throws JSONException, IllegalAccessException {
         flatParam = flatUtil.extractData(new JSONObject(data));
         flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
-        return new RedirectView("dashboard");
+        return "ok";
     }
 
+    @GetMapping(value = "/search")
+    public String renderSearch() {
+        return "search_bar";
+    }
 
     @GetMapping(value = "/display")
     public String angular() {
