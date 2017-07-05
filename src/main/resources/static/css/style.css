@@ -54,10 +54,6 @@ a, a:link, a:visited, a:hover, a:active {
     color: #333;
 }
 
-.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-    color: rgba(255, 255, 255, 0.6);
-}
-
 select[name="flatsTable_length"], input[type="search"] {
     color: #333;
 }
@@ -96,4 +92,40 @@ select[name="flatsTable_length"], input[type="search"] {
 
 th {
     cursor:pointer;
+}
+
+.copyright {
+    margin-top: 20px;
+    min-height: 40px;
+    background-color: #000000;
+}
+
+.copyright p {
+    text-align: left;
+    color: #FFF;
+    padding: 10px 0;
+    margin-bottom: 0px;
+}
+
+.bottom_ul {
+    list-style-type: none;
+    float: right;
+    margin-bottom: 0px;
+}
+
+.bottom_ul li {
+    float: left;
+    line-height: 40px;
+}
+
+.bottom_ul li:after {
+    content: "/";
+    color: #FFF;
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.bottom_ul li a {
+    color: #FFF;
+    font-size: 12px;
 }

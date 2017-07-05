@@ -47,7 +47,6 @@
         </thead>
 
         <tbody>
-        <div class="pagination pull-right">
             <tr ng-repeat="flat in flatList.flats | orderBy:sortKey:reverse | filter:search">
                 <td>{{flat.id}}</td>
                 <td>{{flat.squareMeter}}</td>
@@ -58,7 +57,6 @@
                 <td>{{flat.company}}</td>
                 <td>{{(flat.rent / flat.squareMeter) | number:0}}</td>
             </tr>
-        </div>
         </tbody>
     </table>
 

@@ -9,8 +9,8 @@ app.controller('SearchCtrl', function ($scope, $http) {
             headers: {'Content-Type': 'application/json; charset=UTF-8'},
             data: JSON.stringify($scope.params)
         })
-            .then(function (response) {
-                console.log("ok")
+            .then(function () {
+                console.log("ok - search")
             })
     };
 
