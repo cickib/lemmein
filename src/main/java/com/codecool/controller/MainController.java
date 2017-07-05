@@ -42,12 +42,6 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping(value = "/dashboard")
-    public String dashboard() {
-        logger.info("'/dashboard' route called - method: {}.", RequestMethod.GET);
-        return "dashboard";
-    }
-
     @GetMapping(value = "/results")
     @ResponseBody
     public String results() throws JSONException {
@@ -62,18 +56,6 @@ public class MainController {
         flatParam = flatUtil.extractData(new JSONObject(data));
         flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
         return "ok";
-    }
-
-    @GetMapping(value = "/search")
-    public String renderSearch() {
-        logger.info("'/search' route called - method: {}.", RequestMethod.GET);
-        return "search_bar";
-    }
-
-    @GetMapping(value = "/display")
-    public String display() {
-        logger.info("'/display' route called - method: {}.", RequestMethod.GET);
-        return "display_flats";
     }
 
     @GetMapping(value = "/about")

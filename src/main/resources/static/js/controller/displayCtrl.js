@@ -1,4 +1,4 @@
-app.controller('FlatCtrl', function ($http, $scope) {
+app.controller('DisplayCtrl', function ($http, $scope) {
 
     var flatList = this;
 
@@ -7,7 +7,7 @@ app.controller('FlatCtrl', function ($http, $scope) {
             flatList.flats = response.data.flats;
         })
         .then(function () {
-            console.log("ok - flatTable")
+            console.log("ok - display")
         });
 
     $scope.sort = function (keyname) {
