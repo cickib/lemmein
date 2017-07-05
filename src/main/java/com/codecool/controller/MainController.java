@@ -20,6 +20,7 @@ import java.util.List;
 public class MainController {
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
     @Autowired
     protected FlatRepository flatRepository;
 
@@ -43,10 +44,6 @@ public class MainController {
         return "dashboard";
     }
 
-    private List<Flat> collectAllFlats() {
-        return flatRepository.findAllByOrderByDate();
-    }
-
     @GetMapping(value = "/results")
     @ResponseBody
     public String results() throws JSONException {
@@ -57,6 +54,7 @@ public class MainController {
     @PostMapping(value = "/search")
     @ResponseBody
     public String getSearchParams(@RequestBody String data) throws JSONException, IllegalAccessException {
+        logger.info("'/search' route called - method: {}.", RequestMethod.POST);
         flatParam = flatUtil.extractData(new JSONObject(data));
         flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
         return "ok";
@@ -64,11 +62,18 @@ public class MainController {
 
     @GetMapping(value = "/search")
     public String renderSearch() {
+        logger.info("'/search' route called - method: {}.", RequestMethod.GET);
         return "search_bar";
     }
 
     @GetMapping(value = "/display")
-    public String angular() {
+    public String display() {
+        logger.info("'/display' route called - method: {}.", RequestMethod.GET);
         return "display_flats";
     }
+
+    private List<Flat> collectAllFlats() {
+        return flatRepository.findAllByOrderByDate();
+    }
+
 }
