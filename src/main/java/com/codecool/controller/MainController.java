@@ -53,9 +53,15 @@ public class MainController {
     @ResponseBody
     public String getSearchParams(@RequestBody String data) throws JSONException, IllegalAccessException {
         logger.info("'/search' route called - method: {}.", RequestMethod.POST);
-        flatParam = flatUtil.extractData(new JSONObject(data));
-        flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
-        return "ok";
+        JSONObject response = new JSONObject().put("status", "fail");
+        try {
+            flatParam = flatUtil.extractData(new JSONObject(data));
+            flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
+            response.put("status", "ok");
+        } catch (Exception e) {
+            logger.error("{} occurred while processing search params: {}", e.getCause(), e.getMessage());
+        }
+        return response.toString();
     }
 
     @GetMapping(value = "/about")
