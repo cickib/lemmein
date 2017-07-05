@@ -1,15 +1,17 @@
-var lemmein = angular.module('lemmein', []);
-lemmein.config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.defaults.useXDomain = true;
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];
-}]);
+app.controller('FlatCtrl', function ($http, $scope) {
 
-angular.module('lemmein', [])
-    .controller('FlatController', function ($http) {
-        var flatList = this;
+    var flatList = this;
 
-        $http.get("/results")
-            .then(function (response) {
-                flatList.flats = response.data.flats;
-            })
-    });
+    $http.get("/results")
+        .then(function (response) {
+            flatList.flats = response.data.flats;
+        })
+        .then(function () {
+            console.log("ok - flatTable")
+        });
+
+    $scope.sort = function (keyname) {
+        $scope.sortKey = keyname;
+        $scope.reverse = !$scope.reverse;
+    }
+});
