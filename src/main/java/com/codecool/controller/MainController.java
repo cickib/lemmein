@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 
@@ -72,8 +76,25 @@ public class MainController {
         return "display_flats";
     }
 
+    @GetMapping(value = "/about")
+    @ResponseBody
+    public String about() {
+        logger.info("'/about' route called - method: {}.", RequestMethod.GET);
+        return getTextFromFile("./src/main/resources/text/about.txt");
+    }
+
     private List<Flat> collectAllFlats() {
         return flatRepository.findAllByOrderByDate();
+    }
+
+    private String getTextFromFile(String filename) {
+        StringWriter writer = new StringWriter();
+        try {
+            spark.utils.IOUtils.copy(new FileInputStream(new File(filename)), writer);
+        } catch (IOException e) {
+            logger.error("{} occurred while reading from file: {}.", e.getCause(), e.getMessage());
+        }
+        return writer.toString();
     }
 
 }
