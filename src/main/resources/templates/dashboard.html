@@ -1,30 +1,36 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="lemmein">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="lemmein">
 <head>
     <meta charset="UTF-8">
     <title>DASHBOARD</title>
 
-    <div th:replace="fragments/styles :: copy"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
-    <script src="/js/controller/searchController.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/footer.css"/>
 
 </head>
-<body ng-controller="searchController">
-
-<div th:replace="fragments/navbar :: copy"></div>
+<body>
 
 <div class="container fluid main">
     <div class="row">
-
-        <div th:replace="fragments/search_bar :: copy"></div>
-
+        DASHBOARD
         <br>
         <hr>
     </div>
 </div>
-<div th:replace="fragments/footer :: copy"></div>
-<div th:replace="fragments/scripts :: copy"></div>
+
+<div class="copyright">
+    <div class="container">
+        <div class="col-md-6">
+            <p>© 2017 - All Rights reserved</p>
+        </div>
+        <div class="col-md-6">
+            <ul class="bottom_ul">
+                <li><a href="//github.com/cickib"><i class="fa fa-github" aria-hidden="true"></i> GitHub
+                    profile</a></li>
+                <li><a href="#">About the project</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 </body>
 </html>

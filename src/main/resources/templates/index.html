@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>FlatProject</title>
-
-    <div th:replace="fragments/styles :: copy"></div>
-
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/footer.css"/>
 </head>
 <body>
 
@@ -12,14 +11,40 @@
     <div class="row main">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <div th:replace="fragments/login :: copy"></div>
+            <form action="/login" method="post" name="Login_Form" class="form-signin">
+                <br/>
+                <i class="fa fa-building-o logo" aria-hidden="true"></i>
+                <hr class="colorgraph">
+
+                <h3 class="form-signin-heading">LEMMEIN</h3>
+                <br/>
+
+                <input type="text" class="form-control" name="username" placeholder="Username" required=""
+                       autofocus=""/>
+                <input type="password" class="form-control" name="password" placeholder="Password" required=""/>
+
+                <button class="btn btn-lg btn-primary btn-block" name="SUBMIT" value="LOGIN" type="Submit">LOGIN
+                </button>
+            </form>
         </div>
         <div class="col-md-4"></div>
     </div>
 </div>
 
-<div th:replace="fragments/footer :: copy"></div>
-<div th:replace="fragments/scripts :: copy"></div>
+<div class="copyright">
+    <div class="container">
+        <div class="col-md-6">
+            <p>© 2017 - All Rights reserved</p>
+        </div>
+        <div class="col-md-6">
+            <ul class="bottom_ul">
+                <li><a href="//github.com/cickib"><i class="fa fa-github" aria-hidden="true"></i> GitHub
+                    profile</a></li>
+                <li><a href="#">About the project</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
