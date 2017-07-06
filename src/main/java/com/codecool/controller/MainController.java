@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @Controller
@@ -75,14 +75,14 @@ public class MainController {
         return flatRepository.findAllByOrderByDate();
     }
 
-    private String getTextFromFile(String filename) {
-        StringWriter writer = new StringWriter();
-        try {
-            spark.utils.IOUtils.copy(new FileInputStream(new File(filename)), writer);
+    private String getTextFromFile(String fileName) {
+        StringBuilder text = new StringBuilder();
+        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+            stream.forEach(text::append);
         } catch (IOException e) {
             logger.error("{} occurred while reading from file: {}.", e.getCause(), e.getMessage());
         }
-        return writer.toString();
+        return text.toString();
     }
 
 }
