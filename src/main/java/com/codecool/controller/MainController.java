@@ -36,12 +36,6 @@ public class MainController {
 
     private FlatParam flatParam;
 
-    @GetMapping(value = "/")
-    public String index() {
-        logger.info("'/' route called - method: {}.", RequestMethod.GET);
-        return "index";
-    }
-
     @GetMapping(value = "/results")
     @ResponseBody
     public String results() throws JSONException {
