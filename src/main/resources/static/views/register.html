@@ -2,7 +2,8 @@
     <div class="row main">
         <div class="col-md-4"></div>
         <div class="col-md-4" ng-app="BpFF" ng-controller="RegisterCtrl">
-            <form class="form-horizontal" id="registerForm" name="registerForm" ng-submit="register(registerForm)">
+            <form class="form-horizontal" id="registerForm" name="registerForm"
+                  ng-submit="register(registerForm.$valid)" novalidate>
                 <h3 class="form-signin-heading">REGISTER</h3>
                 <br>
                 <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus=""
@@ -11,8 +12,12 @@
                        ng-model="newUser.password"/>
                 <input type="password" class="form-control" name="passwordAgain" placeholder="Confirm password"
                        required=""/>
-                <button class="btn btn-lg btn-primary btn-block" name="SUBMIT" value="REGISTER" type="Submit">REGISTER
-                </button>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block" type="Submit"
+                            ng-disabled="registerForm.$invalid && !isMatching">
+                        REGISTER
+                    </button>
+                </div>
             </form>
         </div>
         <div class="col-md-4"></div>
