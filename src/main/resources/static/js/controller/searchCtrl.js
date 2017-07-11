@@ -10,7 +10,7 @@ app.controller('SearchCtrl', function ($scope, $http) {
             data: JSON.stringify($scope.params)
         })
             .then(function () {
-                console.log("ok - search")
+                console.log('ok - search')
             })
     };
 
