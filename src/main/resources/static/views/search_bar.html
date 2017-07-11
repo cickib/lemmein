@@ -2,7 +2,7 @@
     <div class="row main">
         <div ng-app='BpFF' ng-controller='SearchCtrl'>
             <h1>SEARCH <span class="glyphicon glyphicon-search"></span></h1>
-            <form class="form-horizontal" id="searchForm" name="searchForm" ng-submit="search(searchForm)">
+            <form class="form-horizontal" id="searchForm" name="searchForm">
                 <div class="col-md-6">
                     <div class="row">
                         <div class="form-group">
@@ -73,7 +73,9 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary btn-lg btn-block" id="searchBtn">SEARCH</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="searchBtn" ng-click="search()">
+                    SEARCH
+                </button>
             </form>
         </div>
     </div>

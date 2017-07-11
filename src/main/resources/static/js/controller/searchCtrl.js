@@ -2,7 +2,6 @@ app.controller('SearchCtrl', function ($scope, $http) {
     $scope.params = {};
 
     $scope.search = function () {
-        console.log($scope.params)
         $http({
             method: 'POST',
             url: '/search',
