@@ -5,25 +5,26 @@ import com.codecool.model.Flat;
 import com.codecool.repository.FlatRepository;
 import com.codecool.util.FlatParam;
 import com.codecool.util.FlatUtil;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Controller
 public class MainController {
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
     @Autowired
     protected FlatRepository flatRepository;
 
@@ -35,46 +36,41 @@ public class MainController {
 
     private FlatParam flatParam;
 
-    @GetMapping(value = "/")
-    public String index() {
-        logger.info("'/' route called - method: {}.", RequestMethod.GET);
-        return "index";
+    @GetMapping(value = "/results")
+    @ResponseBody
+    public String results() throws JSONException {
+        logger.info("'/results' route called - method: {}.", RequestMethod.GET);
+        return flatUtil.collectFlatsToJson(collectAllFlats());
     }
 
-    @GetMapping(value = "/dashboard")
-    public String dashboard(Model model) {
-        logger.info("'/dashboard' route called - method: {}.", RequestMethod.GET);
-        model.addAttribute("flats", collectAllFlats());
-        return "dashboard";
+    @PostMapping(value = "/search")
+    @ResponseBody
+    public String getSearchParams(@RequestBody String data) throws JSONException, IllegalAccessException {
+        logger.info("'/search' route called - method: {}.", RequestMethod.POST);
+        flatParam = flatUtil.extractData(new JSONObject(data));
+        flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
+        return "ok";
+    }
+
+    @GetMapping(value = "/about")
+    @ResponseBody
+    public String about() {
+        logger.info("'/about' route called - method: {}.", RequestMethod.GET);
+        return getTextFromFile("./src/main/resources/text/about.txt");
     }
 
     private List<Flat> collectAllFlats() {
         return flatRepository.findAllByOrderByDate();
     }
 
-    @GetMapping(value = "/results")
-    @ResponseBody
-    public String results() throws JSONException {
-        logger.info("'/results' route called - method: {}.", RequestMethod.GET);
-        JSONArray jsonArray = null;
-
-        if (collectAllFlats().size() > 0) {
-            logger.info("{} flats collected.", collectAllFlats().size());
-            List<JSONObject> js = collectAllFlats()
-                    .stream()
-                    .map(flat -> flatUtil.createJsonFromFlat(flat))
-                    .collect(Collectors.toList());
-            jsonArray = new JSONArray(js);
+    private String getTextFromFile(String filename) {
+        StringWriter writer = new StringWriter();
+        try {
+            spark.utils.IOUtils.copy(new FileInputStream(new File(filename)), writer);
+        } catch (IOException e) {
+            logger.error("{} occurred while reading from file: {}.", e.getCause(), e.getMessage());
         }
-
-        return new JSONObject().put("flats", jsonArray).toString();
+        return writer.toString();
     }
 
-    @PostMapping(value = "/search")
-    @ResponseBody
-    public RedirectView getParams(@RequestBody String data) throws JSONException, IllegalAccessException {
-        flatParam = flatUtil.extractData(new JSONObject(data));
-        flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
-        return new RedirectView("dashboard");
-    }
 }

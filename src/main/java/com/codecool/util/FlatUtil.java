@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -29,8 +29,27 @@ import java.util.stream.IntStream;
 public class FlatUtil {
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
+    public String collectFlatsToJson(List<Flat> flats) {
+        JSONObject result = new JSONObject();
+        JSONArray jsonArray = null;
 
-    public JSONObject createJsonFromFlat(Flat flat) {
+        if (flats.size() > 0) {
+            logger.info("{} flats collected.", flats.size());
+            List<JSONObject> js = flats
+                    .stream()
+                    .map(this::createJsonFromFlat)
+                    .collect(Collectors.toList());
+            jsonArray = new JSONArray(js);
+        }
+        try {
+            result.put("flats", jsonArray);
+        } catch (JSONException e) {
+            logger.error("{} occurred while collecting flats to json: {}", e.getClass().getSimpleName(), e.getMessage());
+        }
+        return result.toString();
+    }
+
+    private JSONObject createJsonFromFlat(Flat flat) {
         JSONObject json = new JSONObject();
         List<Field> fields = Arrays.asList(Flat.class.getDeclaredFields()).subList(0, 7);
         try {
@@ -73,20 +92,15 @@ public class FlatUtil {
 
     private List<String> extractList(JSONObject json, String key) {
         List<String> extracted = new ArrayList<>();
-        try {
-            JSONArray jsonArray = json.getJSONArray(key);
-            if (jsonArray.length() > 0) {
-                extracted = Arrays.asList(jsonArray
-                        .join(",")
-                        .replaceAll("\"", "")
-                        .split(","));
 
-// deleting unnecessary helper param dAll/sAll
-                Pattern pattern = Pattern.compile(".All");
-                extracted = extracted
-                        .stream()
-                        .filter(pattern.asPredicate().negate())
-                        .collect(Collectors.toList());
+        try {
+            JSONObject list = (JSONObject) json.get(key);
+            Iterator jsonIt = list.keys();
+            while (jsonIt.hasNext()) {
+                String current = jsonIt.next().toString();
+                if ((Boolean) list.get(current)) {
+                    extracted.add(current);
+                }
             }
         } catch (JSONException e) {
             logger.error("{} occurred while trying to extract {}: {}", e.getClass().getSimpleName(), key, e.getMessage());
@@ -100,7 +114,6 @@ public class FlatUtil {
         if (extracted.size() > 0) {
             flatParam.setDistricts(extracted
                     .stream()
-                    .map(d -> d.replace("d", ""))
                     .map(Integer::parseInt)
                     .collect(Collectors.toList()));
         } else {

@@ -1,0 +1,24 @@
+<script src="https://use.fontawesome.com/7c224a1209.js"></script>
+
+<h1 style="text-align:center;">BudapestFlatFinder project</h1>
+<h3 style="text-align:center;">The project is <i>heavily</i> in progress.</h3>
+<hr>
+<p>
+This application collects flats from different rental websites based on your requirements.
+<br>
+Displaying every flat in one integrated table that can be sorted and filtered by every column makes it easier to find your new home.
+</p>
+<br>
+<strong>Tech stack:</strong>
+<ul>
+<li>Java8/SpringBoot back-end</li>
+<li>PostgreSQL db + Hibernate</li>
+<li>Angular 1 front-end + traces of Thymeleaf & JQuery</li>
+</ul>
+<hr>
+<br>
+<div style="text-align:center;">
+<a href="//github.com/cickib/lemmein"><i class="fa fa-github" aria-hidden="true"></i> GitHub page of project</a>
+</div>
+
+

@@ -1,25 +1,67 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <title>FlatProject</title>
+    <title>BudapestFlatFinder</title>
 
-    <div th:replace="fragments/styles :: copy"></div>
+    <!--styles-->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
 
-</head>
-<body>
+<body ng-app="BpFF">
 
-<div class="container fluid main">
-    <div class="row main">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-            <div th:replace="fragments/login :: copy"></div>
+<!--site navigation-->
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">BudapestFlatFinder</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a sec:authorize="isAuthenticated()" href="#display"><i class="fa fa-building-o" aria-hidden="true"></i> DISPLAY</a></li>
+                <li><a sec:authorize="isAuthenticated()" href="#search"><span class="glyphicon glyphicon-search"></span> SEARCH</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#about"><i class="fa fa-shield"></i> ABOUT</a></li>
+                <li><a sec:authorize="!isAuthenticated()" href="#register"><i class="fa fa-user-circle"></i> REGISTER</a></li>
+                <li><a sec:authorize="!isAuthenticated()" href="#login"><i class="fa fa-sign-in"></i> LOGIN</a></li>
+                <li><a sec:authorize="isAuthenticated()" href="/logout"><i class="fa fa-sign-out"></i> LOGOUT</a></li>
+            </ul>
         </div>
-        <div class="col-md-4"></div>
+    </nav>
+</header>
+
+<!--views-->
+<div ng-view></div>
+
+<!--footer-->
+<div class="copyright">
+    <div class="container">
+        <div class="col-md-6">
+            <p>© 2017 - All Rights reserved</p>
+        </div>
+        <div class="col-md-6">
+            <ul class="bottom_ul">
+                <li><a href="//github.com/cickib"><i class="fa fa-github"></i> GitHub profile</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 
-<div th:replace="fragments/footer :: copy"></div>
-<div th:replace="fragments/scripts :: copy"></div>
+<!--scripts-->
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-sanitize.js"></script>
+<script src="https://use.fontawesome.com/7c224a1209.js"></script>
+<script src="js/app.js"></script>
 
+<!--controllers-->
+<script src="js/controller/aboutCtrl.js"></script>
+<script src="js/controller/displayCtrl.js"></script>
+<script src="js/controller/mainCtrl.js"></script>
+<script src="js/controller/registerCtrl.js"></script>
+<script src="js/controller/searchCtrl.js"></script>
+
+</head>
 </body>
 </html>

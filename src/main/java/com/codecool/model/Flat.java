@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -34,12 +35,9 @@ public class Flat {
     private String company;
 
     @NotNull
-    private Status status = Status.NEW;
-
-    @NotNull
     private Date date = new Date();
 
-    @NotNull
-    private boolean interested = false;
+    @ManyToMany(mappedBy = "flats")
+    private List<MyUser> users;
 
 }

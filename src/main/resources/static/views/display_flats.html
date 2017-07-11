@@ -1,0 +1,63 @@
+<h1>FLATS <i class="fa fa-building-o" aria-hidden="true"></i></h1>
+
+<div ng-app="BpFF" ng-controller="DisplayCtrl as flatList">
+
+    <form class="form-inline">
+        <div class="form-group">
+            <label>FILTER <span class="glyphicon glyphicon-search"></span></label>
+            <input type="text" ng-model="search" class="form-control" placeholder="Search">
+        </div>
+    </form>
+
+    <hr>
+
+    <table class="table table-hover" name="flatsTable">
+        <thead>
+        <tr>
+            <th ng-click="sort('id')">ID
+                <span class="glyphicon sort-icon" ng-show="sortKey=='id'"
+                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+            <th ng-click="sort('squareMeter')">SQUAREMETER
+                <span class="glyphicon sort-icon" ng-show="sortKey=='squareMeter'"
+                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+            <th ng-click="sort('rent')">RENT/MONTH
+                <span class="glyphicon sort-icon" ng-show="sortKey=='rent'"
+                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+            <th ng-click="sort('district')">DISTRICT
+                <span class="glyphicon sort-icon" ng-show="sortKey=='district'"
+                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+            <th ng-click="sort('address')">ADDRESS
+                <span class="glyphicon sort-icon" ng-show="sortKey=='address'"
+                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+            <th>URL</th>
+            <th ng-click="sort('company')">COMPANY
+                <span class="glyphicon sort-icon" ng-show="sortKey=='squareMeter'"
+                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+            <th ng-click="sort('rent/squareMeter')">PRICE/M<sup>2</sup>
+                <span class="glyphicon sort-icon" ng-show="sortKey=='rent/squareMeter'"
+                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="flat in flatList.flats | orderBy:sortKey:reverse | filter:search">
+                <td>{{flat.id}}</td>
+                <td>{{flat.squareMeter}}</td>
+                <td>{{flat.rent}}</td>
+                <td>{{flat.district}}</td>
+                <td>{{flat.address}}</td>
+                <td><a href="{{flat.adUrl}}">link to flat</a></td>
+                <td>{{flat.company}}</td>
+                <td>{{(flat.rent / flat.squareMeter) | number:0}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
