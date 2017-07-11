@@ -13,6 +13,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/about").permitAll()
+                .antMatchers("/register").permitAll()
                 .antMatchers("/*").authenticated()
                 .and().formLogin().loginPage("/login").permitAll().defaultSuccessUrl("/")
                 .and().logout().logoutSuccessUrl("/").deleteCookies()
