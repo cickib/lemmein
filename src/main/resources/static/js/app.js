@@ -1,4 +1,4 @@
-var app = angular.module('BpFF', ['ngRoute']);
+var app = angular.module('BpFF', ['ngRoute', 'ngSanitize']);
 
 app.config(function ($routeProvider) {
     $routeProvider
