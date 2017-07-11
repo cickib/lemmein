@@ -1,4 +1,4 @@
-app.controller('SearchCtrl', function ($scope, $http) {
+app.controller('SearchCtrl', function ($scope, $http, $window) {
     $scope.params = {};
 
     $scope.search = function () {
@@ -10,6 +10,7 @@ app.controller('SearchCtrl', function ($scope, $http) {
         })
             .then(function () {
                 console.log("ok - search")
+                $window.location.href = '/#/display';
             })
     };
 
