@@ -1,10 +1,9 @@
 package com.codecool.controller;
 
 import com.codecool.crawler.CrawlerFactory;
-import com.codecool.model.Flat;
-import com.codecool.repository.FlatRepository;
 import com.codecool.util.FlatParam;
 import com.codecool.util.FlatUtil;
+import com.codecool.util.TextReader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,20 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Stream;
-
 
 @Controller
 public class MainController {
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
-
-    @Autowired
-    protected FlatRepository flatRepository;
 
     @Autowired
     private FlatUtil flatUtil;
@@ -35,6 +25,9 @@ public class MainController {
     private CrawlerFactory factory;
 
     private FlatParam flatParam;
+
+    @Autowired
+    private TextReader textReader;
 
     @GetMapping(value = "/")
     public String index() {
@@ -46,7 +39,7 @@ public class MainController {
     @ResponseBody
     public String results() throws JSONException {
         logger.info("'/results' route called - method: {}.", RequestMethod.GET);
-        return flatUtil.collectFlatsToJson(collectAllFlats());
+        return flatUtil.collectFlatsToJson();
     }
 
     @PostMapping(value = "/search")
@@ -68,21 +61,7 @@ public class MainController {
     @ResponseBody
     public String about() {
         logger.info("'/about' route called - method: {}.", RequestMethod.GET);
-        return getTextFromFile("./src/main/resources/text/about.txt");
-    }
-
-    private List<Flat> collectAllFlats() {
-        return flatRepository.findAllByOrderByDate();
-    }
-
-    private String getTextFromFile(String fileName) {
-        StringBuilder text = new StringBuilder();
-        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
-            stream.forEach(text::append);
-        } catch (IOException e) {
-            logger.error("{} occurred while reading from file: {}.", e.getCause(), e.getMessage());
-        }
-        return text.toString();
+        return textReader.getTextFromFile("./src/main/resources/text/about.txt");
     }
 
 }
