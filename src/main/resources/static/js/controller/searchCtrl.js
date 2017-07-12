@@ -9,7 +9,7 @@ app.controller('SearchCtrl', function ($scope, $http, $window) {
             data: JSON.stringify($scope.params)
         })
             .then(function () {
-                console.log("ok - search")
+                console.log('ok - search')
                 $window.location.href = '/#/display';
             })
     };

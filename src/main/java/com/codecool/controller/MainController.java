@@ -1,10 +1,9 @@
 package com.codecool.controller;
 
 import com.codecool.crawler.CrawlerFactory;
-import com.codecool.model.Flat;
-import com.codecool.repository.FlatRepository;
 import com.codecool.util.FlatParam;
 import com.codecool.util.FlatUtil;
+import com.codecool.util.TextReader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,20 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.List;
-
 
 @Controller
 public class MainController {
 
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
-
-    @Autowired
-    protected FlatRepository flatRepository;
 
     @Autowired
     private FlatUtil flatUtil;
@@ -36,41 +26,36 @@ public class MainController {
 
     private FlatParam flatParam;
 
+    @Autowired
+    private TextReader textReader;
+
     @GetMapping(value = "/results")
     @ResponseBody
     public String results() throws JSONException {
         logger.info("'/results' route called - method: {}.", RequestMethod.GET);
-        return flatUtil.collectFlatsToJson(collectAllFlats());
+        return flatUtil.collectFlatsToJson();
     }
 
     @PostMapping(value = "/search")
     @ResponseBody
     public String getSearchParams(@RequestBody String data) throws JSONException, IllegalAccessException {
         logger.info("'/search' route called - method: {}.", RequestMethod.POST);
-        flatParam = flatUtil.extractData(new JSONObject(data));
-        flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
-        return "ok";
+        JSONObject response = new JSONObject().put("status", "fail");
+        try {
+            flatParam = flatUtil.extractData(new JSONObject(data));
+            flatParam.getSites().forEach(company -> factory.getCrawler(company, flatParam).getFlats());
+            response.put("status", "ok");
+        } catch (Exception e) {
+            logger.error("{} occurred while processing search params: {}", e.getCause(), e.getMessage());
+        }
+        return response.toString();
     }
 
     @GetMapping(value = "/about")
     @ResponseBody
     public String about() {
         logger.info("'/about' route called - method: {}.", RequestMethod.GET);
-        return getTextFromFile("./src/main/resources/text/about.txt");
-    }
-
-    private List<Flat> collectAllFlats() {
-        return flatRepository.findAllByOrderByDate();
-    }
-
-    private String getTextFromFile(String filename) {
-        StringWriter writer = new StringWriter();
-        try {
-            spark.utils.IOUtils.copy(new FileInputStream(new File(filename)), writer);
-        } catch (IOException e) {
-            logger.error("{} occurred while reading from file: {}.", e.getCause(), e.getMessage());
-        }
-        return writer.toString();
+        return textReader.getTextFromFile("./src/main/resources/text/about.txt");
     }
 
 }

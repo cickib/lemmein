@@ -1,10 +1,10 @@
 app.controller('AboutCtrl', function ($http, $scope) {
     $scope.about = null;
-    $http.get("/about")
+    $http.get('/about')
         .then(function (response) {
             $scope.about = response.data;
         })
         .then(function () {
-            console.log("ok - about")
+            console.log('ok - about')
         });
 });

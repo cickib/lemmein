@@ -1,8 +1,12 @@
 package com.codecool.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 
@@ -11,14 +15,15 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(unique = true)
     private String userName;
     private String password;
+    private Date regDate;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "myUser_flat",
@@ -26,4 +31,9 @@ public class MyUser {
             inverseJoinColumns = @JoinColumn(name = "flat_id", referencedColumnName = "id"),
             uniqueConstraints = @UniqueConstraint(columnNames = {"myUser_id", "flat_id"}))
     private List<Flat> flats;
+
+    public MyUser(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+    }
 }
