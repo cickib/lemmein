@@ -12,10 +12,10 @@ import java.util.List;
 @Setter
 @ToString
 public class FlatParam {
-    int rentFrom;
-    int rentTo;
-    int sizeFrom;
-    int sizeTo;
-    List<Integer> districts;
-    List<Company> sites;
+    private int rentFrom;
+    private int rentTo;
+    private int sizeFrom;
+    private int sizeTo;
+    private List<Integer> districts;
+    private List<Company> sites;
 }
