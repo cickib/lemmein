@@ -2,17 +2,45 @@
     <div class="row main">
         <div class="col-md-4"></div>
         <div class="col-md-4" ng-app="BpFF" ng-controller="RegisterCtrl">
-            <form class="form-horizontal" id="registerForm" name="registerForm" ng-submit="register(registerForm)">
+            <form class="form-horizontal" id="registerForm" name="registerForm"
+                  ng-submit="register(registerForm.$valid)" novalidate>
                 <h3 class="form-signin-heading">REGISTER</h3>
                 <br>
-                <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus=""
-                       ng-model="newUser.userName"/>
-                <input type="password" class="form-control" name="password" placeholder="Password" required=""
-                       ng-model="newUser.password"/>
-                <input type="password" class="form-control" name="passwordAgain" placeholder="Confirm password"
-                       required=""/>
-                <button class="btn btn-lg btn-primary btn-block" name="SUBMIT" value="REGISTER" type="Submit">REGISTER
-                </button>
+                <div class="form-group"
+                     ng-class="{ 'has-error' : registerForm.userName.$invalid && !registerForm.userName.$pristine }">
+                    <input type="text" name="userName" placeholder="Username" class="form-control"
+                           ng-model="newUser.userName" required ng-minlength="4" ng-maxlength="10"
+                           autofocus="autofocus">
+                    <p ng-show="registerForm.userName.$error.minlength" class="help-block">Username is too short.</p>
+                    <p ng-show="registerForm.userName.$error.maxlength" class="help-block">Username is too long.</p>
+                </div>
+
+                <div class="form-group"
+                     ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine }">
+                    <input type="password" class="form-control" name="password" placeholder="Password"
+                           ng-model="newUser.password" required ng-minlength="6" ng-maxlength="10">
+                    <p ng-show="registerForm.password.$error.minlength" class="help-block">Password is too short.</p>
+                    <p ng-show="registerForm.password.$error.maxlength" class="help-block">Password is too long.</p>
+                </div>
+
+                <div class="form-group"
+                     ng-class="{ 'has-error' : registerForm.passwordAgain.$invalid && !registerForm.passwordAgain.$pristine }">
+                    <input type="password" class="form-control" name="passwordAgain" placeholder="Password again"
+                           ng-model="newUser.passwordAgain" required ng-minlength="6" ng-maxlength="10"
+                           ng-change="match()">
+                    <p ng-show="registerForm.passwordAgain.$error.minlength" class="help-block">Password is too
+                        short.</p>
+                    <p ng-show="registerForm.passwordAgain.$error.maxlength" class="help-block">Password is too
+                        long.</p>
+                    <p ng-show="isMatching">Passwords have to match!</p>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block" type="Submit"
+                            ng-disabled="registerForm.$invalid && !isMatching">
+                        REGISTER
+                    </button>
+                </div>
             </form>
         </div>
         <div class="col-md-4"></div>
