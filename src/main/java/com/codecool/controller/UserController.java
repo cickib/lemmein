@@ -29,6 +29,7 @@ public class UserController {
         JSONObject response = new JSONObject().put("status", "fail");
         try {
             userService.create(user);
+            logger.info("New user registered. Username: '{}'", user.getUserName());
             response.put("status", "ok");
         } catch (Exception e) {
             logger.error("{} occurred while creating a new user: {}", e.getCause(), e.getMessage());

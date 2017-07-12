@@ -13,6 +13,8 @@
                            autofocus="autofocus">
                     <p ng-show="registerForm.userName.$error.minlength" class="help-block">Username is too short.</p>
                     <p ng-show="registerForm.userName.$error.maxlength" class="help-block">Username is too long.</p>
+                    <p ng-show="registerForm.userName.$error.required && !registerForm.userName.$pristine"
+                       class="help-block">Please enter a username!</p>
                 </div>
 
                 <div class="form-group"
@@ -32,12 +34,13 @@
                         short.</p>
                     <p ng-show="registerForm.passwordAgain.$error.maxlength" class="help-block">Password is too
                         long.</p>
-                    <p ng-show="isMatching">Passwords have to match!</p>
+                    <p ng-show="!registerForm.passwordAgain.$pristine && !registerForm.passwordAgain.$error.minlength && !registerForm.passwordAgain.$error.maxlength && !isMatching">
+                        Passwords have to match!</p>
                 </div>
 
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block" type="Submit"
-                            ng-disabled="registerForm.$invalid && !isMatching">
+                            ng-disabled="((registerForm.$invalid ) || registerForm.$invalid && !isMatching)">
                         REGISTER
                     </button>
                 </div>

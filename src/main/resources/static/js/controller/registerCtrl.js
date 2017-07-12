@@ -1,4 +1,4 @@
-app.controller('RegisterCtrl', function ($scope, $http) {
+app.controller('RegisterCtrl', function ($scope, $http, $window) {
     $scope.newUser = {};
 
     $scope.register = function (isValid) {
@@ -11,16 +11,17 @@ app.controller('RegisterCtrl', function ($scope, $http) {
             })
                 .then(function () {
                     console.log('ok - register')
+                    $window.location.href = '/#/login';
                 })
         }
     };
 
     $scope.match = function () {
-        if ($scope.password != $scope.passwordAgain) {
-            $scope.isMatching = true;
+        if ($scope.newUser.password != $scope.newUser.passwordAgain) {
+            $scope.isMatching = false;
             return false;
         }
-        $scope.isMatching = false;
+        $scope.isMatching = true;
     }
 
 });
