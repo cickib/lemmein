@@ -3,6 +3,7 @@ package com.codecool.util;
 import com.codecool.controller.MainController;
 import com.codecool.crawler.Company;
 import com.codecool.model.Flat;
+import com.codecool.repository.FlatRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -29,7 +31,13 @@ import java.util.stream.IntStream;
 public class FlatUtil {
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
-    public String collectFlatsToJson(List<Flat> flats) {
+    @Autowired
+    private FlatRepository flatRepository;
+
+    private List<Flat> flats;
+
+    public String collectFlatsToJson() {
+        flats = flatRepository.findAllByOrderByDate();
         JSONObject result = new JSONObject();
         JSONArray jsonArray = null;
 
